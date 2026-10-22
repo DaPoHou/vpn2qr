@@ -19,7 +19,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 echo "==> 安装依赖"
 apt update
-apt install -y curl openssl ca-certificates ufw python3 qrencode
+apt install -y curl openssl ca-certificates python3 qrencode
 
 echo "==> 安装 / 更新 Xray"
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
@@ -109,12 +109,6 @@ echo "==> 校验并启动 Xray"
 systemctl enable xray
 systemctl restart xray
 systemctl --no-pager --no-legend status xray | head -n 8
-
-echo "==> 配置防火墙（SSH + ${PORT}/tcp）"
-ufw allow OpenSSH >/dev/null 2>&1 || ufw allow 22/tcp >/dev/null 2>&1 || true
-ufw allow "${PORT}/tcp" >/dev/null 2>&1 || true
-ufw --force enable >/dev/null 2>&1 || true
-ufw status || true
 
 PUBLIC_IP="$(curl -4 -fsS --max-time 8 https://ifconfig.me || true)"
 if [ -z "$PUBLIC_IP" ]; then
